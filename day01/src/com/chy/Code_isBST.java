@@ -18,6 +18,17 @@ public class Code_isBST {
             this.value = data;
         }
     }
+    public static class ReturnData{
+        public boolean isBST;
+        public int max;
+        public int min;
+        public ReturnData(boolean isB,int ma,int mi){
+            isBST = isB;
+            max = ma;
+            min = mi;
+        }
+
+    }
     public static int preValue = Integer.MIN_VALUE;
 
     /**
@@ -80,5 +91,35 @@ public class Code_isBST {
             }
         }
         return true;
+    }
+//    递归的方式
+    /*
+    寻找树的左树的最大值，右树的最小值
+     */
+    public static ReturnData process(Node head){
+        if(head == null){
+            return null;
+        }
+        ReturnData leftData = process(head.left);
+        ReturnData rightData = process(head.right);
+
+        int min = head.value;
+        int max = head.value;
+        if(leftData!=null){
+            min = Math.min(leftData.min,min);
+            max = Math.max(leftData.max,max);
+        }
+        if(rightData!=null){
+            min = Math.min(rightData.min,min);
+            max = Math.max(rightData.max,max);
+        }
+        boolean isBST = true;
+        if(leftData!=null && (!leftData.isBST || leftData.max>=head.value)){
+            isBST = false;
+        }
+        if(rightData!=null && (!rightData.isBST || rightData.min<=head.value)){
+            isBST = false;
+        }
+        return new ReturnData(isBST,max,min);
     }
 }
